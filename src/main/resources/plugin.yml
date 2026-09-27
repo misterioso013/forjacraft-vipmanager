@@ -1,0 +1,62 @@
+name: VipManager
+version: '${project.version}'
+main: com.forjacraft.vipmanager.VipManagerPlugin
+api-version: '1.21'
+author: misterioso013
+description: Multi-tier VIP subscription manager - banked time per tier, one active at a time, automatic expiry.
+
+depend: [LuckPerms]
+softdepend: [Vault, PlaceholderAPI]
+
+commands:
+  vip:
+    description: View your VIP tiers and switch which one is active.
+    usage: /<command> [switch <tier>|help]
+    permission: vipmanager.command.status
+  vipadmin:
+    description: Administer VIP tier balances.
+    usage: /<command> <add|remove|set|activate|info|migrate|reload> ...
+    permission: vipmanager.admin.*
+
+permissions:
+  vipmanager.command.status:
+    description: View own VIP status (/vip)
+    default: true
+  vipmanager.command.switch:
+    description: Switch active VIP tier (/vip switch)
+    default: true
+  vipmanager.bypass.switchcooldown:
+    description: Bypass the cooldown between /vip switch uses
+    default: op
+  vipmanager.admin.*:
+    description: Full admin access to VipManager
+    default: op
+    children:
+      vipmanager.admin.add: true
+      vipmanager.admin.remove: true
+      vipmanager.admin.set: true
+      vipmanager.admin.activate: true
+      vipmanager.admin.info: true
+      vipmanager.admin.migrate: true
+      vipmanager.admin.reload: true
+  vipmanager.admin.add:
+    description: Add banked time to a player's tier
+    default: op
+  vipmanager.admin.remove:
+    description: Remove banked time from a player's tier
+    default: op
+  vipmanager.admin.set:
+    description: Set a player's tier balance to an absolute value
+    default: op
+  vipmanager.admin.activate:
+    description: Force-activate a specific owned tier for a player
+    default: op
+  vipmanager.admin.info:
+    description: View a player's full VIP state
+    default: op
+  vipmanager.admin.migrate:
+    description: Run the one-time migration off permanent parent grants
+    default: op
+  vipmanager.admin.reload:
+    description: Reload config.yml
+    default: op

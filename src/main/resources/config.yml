@@ -1,0 +1,57 @@
+# ForjaCraft VIP Manager
+# Tiers, ordered from lowest to highest rank. Order matters: it decides which
+# owned tier becomes active when the current active tier expires, and which
+# tier "wins" if more than one LuckPerms tier group is ever found on a single
+# player during join-time reconciliation (should not normally happen).
+tiers:
+  barao:
+    luckPermsGroup: barao
+    claimBlockBonus: 5000
+    displayName: '&6Barão'
+  marques:
+    luckPermsGroup: marques
+    claimBlockBonus: 8000
+    displayName: '&fMarquês'
+  duque:
+    luckPermsGroup: duque
+    claimBlockBonus: 12000
+    displayName: '&dDuque'
+  rei:
+    luckPermsGroup: rei
+    claimBlockBonus: 15000
+    displayName: '&cRei'
+
+storage:
+  # sqlite is the only implementation shipped in v1.
+  type: sqlite
+
+sweep:
+  # How often the background task reconciles every player with an active tier
+  # (checkpoints elapsed time, expires tiers that hit zero). Independent of
+  # who is online - see the join listener for the online-specific path.
+  interval-seconds: 60
+
+switch:
+  cooldown-seconds: 60
+
+# Placeholder used by %vipmanager_active_tier% (and friends) when a player
+# owns no tier with time remaining.
+no-tier-placeholder: 'none'
+
+# /vipadmin migrate strips every configured tier's LuckPerms group from every
+# player who has it (searched across LuckPerms' whole backing storage, not
+# just online players) and does NOT grant any banked time - decided this way
+# because the server had not launched yet, so every existing grant was test
+# data. If a future migration ever needs to convert real paying holders'
+# permanent grants into banked time instead of wiping them, that's a
+# deliberate, separate decision to make before touching this command again.
+
+messages:
+  prefix: '&8[&bVIP&8] &r'
+  no-tier-owned: '&cVocê não tem nenhum tier de VIP ativo.'
+  not-owned: '&cVocê não possui o tier &f%tier%&c.'
+  already-active: '&cO tier &f%tier% &cjá está ativo.'
+  switch-success: '&aTier ativo trocado para &f%tier%&a.'
+  switch-cooldown: '&cAguarde &f%seconds%s &cpara trocar de tier novamente.'
+  expired: '&cSeu VIP &f%tier% &cexpirou.'
+  expired-fallback: '&cSeu VIP &f%tier% &cexpirou. Ativado automaticamente: &f%fallback%&c.'
