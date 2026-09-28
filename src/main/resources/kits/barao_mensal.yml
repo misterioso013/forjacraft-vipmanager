@@ -1,0 +1,55 @@
+cooldown-seconds: 2592000
+items:
+  - material: YELLOW_SHULKER_BOX
+    amount: 1
+  - material: IRON_INGOT
+    amount: 8
+  - material: NETHERITE_UPGRADE_SMITHING_TEMPLATE
+    amount: 1
+  - material: DUNE_ARMOR_TRIM_SMITHING_TEMPLATE
+    amount: 4
+  - material: FIREWORK_ROCKET
+    amount: 64
+    firework-power: 3
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - nexo-id: green_aurorite_helmet
+    amount: 1
+  - nexo-id: green_aurorite_chestplate
+    amount: 1
+  - nexo-id: green_aurorite_leggings
+    amount: 1
+  - nexo-id: green_aurorite_boots
+    amount: 1
+  - nexo-id: green_aurorite_wall_banner
+    amount: 1
+  - nexo-id: green_aurorite_ground_banner
+    amount: 1
+  - nexo-id: green_aurorite_pickaxe
+    amount: 1
+  - nexo-id: green_aurorite_axe
+    amount: 1
+  - nexo-id: green_aurorite_shovel
+    amount: 1
+  - nexo-id: green_aurorite_hoe
+    amount: 1
+  - nexo-id: green_aurorite_fishing_rod
+    amount: 1
+  - nexo-id: green_aurorite_sword
+    amount: 1
+  - nexo-id: green_aurorite_macel
+    amount: 1
+  - nexo-id: green_aurorite_trident
+    amount: 1
+  - nexo-id: green_aurorite_spear
+    amount: 1
+  - nexo-id: green_aurorite_shield
+    amount: 1
+  - nexo-id: green_aurorite_crossbow
+    amount: 1
+  - nexo-id: green_aurorite_bow
+    amount: 1

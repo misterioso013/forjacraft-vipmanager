@@ -34,6 +34,13 @@ sweep:
 switch:
   cooldown-seconds: 60
 
+kits:
+  # Command run (as the player) to open the DeluxeMenus VIP kit selection screen -
+  # used both for "/vip kits" and to return the player there from the "Voltar"
+  # button in the kit preview GUI. Matches kitsvip.yml's open_command in the
+  # server-config repo.
+  menu-open-command: 'dm open kitsvip'
+
 # Placeholder used by %vipmanager_active_tier% (and friends) when a player
 # owns no tier with time remaining.
 no-tier-placeholder: 'none'
@@ -55,3 +62,8 @@ messages:
   switch-cooldown: '&cAguarde &f%seconds%s &cpara trocar de tier novamente.'
   expired: '&cSeu VIP &f%tier% &cexpirou.'
   expired-fallback: '&cSeu VIP &f%tier% &cexpirou. Ativado automaticamente: &f%fallback%&c.'
+  kit-unknown: '&cKit desconhecido.'
+  kit-tier-too-low: '&cVocê precisa do tier &f%tier% &cou superior (ativo) pra resgatar esse kit.'
+  kit-on-cooldown: '&cVocê já resgatou esse kit. Espere mais &f%time%&c.'
+  kit-no-space: '&cSeu inventário não tem espaço suficiente pra esse kit. Abra espaço e tente de novo.'
+  kit-claimed: '&aKit resgatado com sucesso!'

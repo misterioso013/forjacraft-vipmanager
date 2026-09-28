@@ -72,6 +72,19 @@
             <version>${sqlite.jdbc.version}</version>
         </dependency>
 
+        <!-- Nexo — not published to any Maven repository (confirmed: no embedded pom.xml/
+             pom.properties, no discoverable coordinate). Compile against the exact jar
+             installed on the server (libs/nexo-1.28.jar, copied in manually - keep it in
+             sync if the server's Nexo version changes). provided-equivalent: Nexo is
+             already on the server classpath at runtime, so this must never be shaded. -->
+        <dependency>
+            <groupId>com.nexomc</groupId>
+            <artifactId>nexo</artifactId>
+            <version>1.28</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/nexo-1.28.jar</systemPath>
+        </dependency>
+
         <!-- Tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

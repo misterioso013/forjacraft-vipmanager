@@ -83,6 +83,14 @@ public final class SqliteVipStorage implements VipStorage {
                         created_at        INTEGER NOT NULL
                     )
                     """);
+            st.execute("""
+                    CREATE TABLE IF NOT EXISTS kit_claims (
+                        uuid            TEXT    NOT NULL,
+                        kit_id          TEXT    NOT NULL,
+                        last_claimed_at INTEGER NOT NULL,
+                        PRIMARY KEY (uuid, kit_id)
+                    )
+                    """);
         }
     }
 
@@ -180,6 +188,44 @@ public final class SqliteVipStorage implements VipStorage {
                 throw new IllegalStateException("Failed to list active players", e);
             }
             return result;
+        }
+    }
+
+    @Override
+    public java.util.Optional<Long> getKitClaimTime(UUID uuid, String kitId) {
+        synchronized (lock) {
+            String sql = "SELECT last_claimed_at FROM kit_claims WHERE uuid = ? AND kit_id = ?";
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                ps.setString(2, kitId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return java.util.Optional.of(rs.getLong("last_claimed_at"));
+                    }
+                    return java.util.Optional.empty();
+                }
+            } catch (SQLException e) {
+                throw new IllegalStateException("Failed to read kit claim time for " + uuid + "/" + kitId, e);
+            }
+        }
+    }
+
+    @Override
+    public void recordKitClaim(UUID uuid, String kitId, long claimedAtMillis) {
+        synchronized (lock) {
+            String sql = """
+                    INSERT INTO kit_claims (uuid, kit_id, last_claimed_at)
+                    VALUES (?, ?, ?)
+                    ON CONFLICT(uuid, kit_id) DO UPDATE SET last_claimed_at = excluded.last_claimed_at
+                    """;
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                ps.setString(2, kitId);
+                ps.setLong(3, claimedAtMillis);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                throw new IllegalStateException("Failed to record kit claim for " + uuid + "/" + kitId, e);
+            }
         }
     }
 

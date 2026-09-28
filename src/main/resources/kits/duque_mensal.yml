@@ -1,0 +1,73 @@
+cooldown-seconds: 2592000
+items:
+  - material: ELYTRA
+    amount: 1
+  - material: CYAN_SHULKER_BOX
+    amount: 2
+  - material: IRON_INGOT
+    amount: 32
+  - material: DIAMOND
+    amount: 24
+  - material: NETHERITE_UPGRADE_SMITHING_TEMPLATE
+    amount: 3
+  - material: TIDE_ARMOR_TRIM_SMITHING_TEMPLATE
+    amount: 4
+  - material: NETHERITE_INGOT
+    amount: 1
+  - material: TOTEM_OF_UNDYING
+    amount: 1
+  - material: FIREWORK_ROCKET
+    amount: 64
+    firework-power: 3
+  - material: FIREWORK_ROCKET
+    amount: 64
+    firework-power: 3
+  - material: FIREWORK_ROCKET
+    amount: 64
+    firework-power: 3
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - nexo-id: purple_aurorite_helmet
+    amount: 1
+  - nexo-id: purple_aurorite_chestplate
+    amount: 1
+  - nexo-id: purple_aurorite_leggings
+    amount: 1
+  - nexo-id: purple_aurorite_boots
+    amount: 1
+  - nexo-id: purple_aurorite_wall_banner
+    amount: 1
+  - nexo-id: purple_aurorite_ground_banner
+    amount: 1
+  - nexo-id: purple_aurorite_pickaxe
+    amount: 1
+  - nexo-id: purple_aurorite_axe
+    amount: 1
+  - nexo-id: purple_aurorite_shovel
+    amount: 1
+  - nexo-id: purple_aurorite_hoe
+    amount: 1
+  - nexo-id: purple_aurorite_fishing_rod
+    amount: 1
+  - nexo-id: purple_aurorite_sword
+    amount: 1
+  - nexo-id: purple_aurorite_macel
+    amount: 1
+  - nexo-id: purple_aurorite_trident
+    amount: 1
+  - nexo-id: purple_aurorite_spear
+    amount: 1
+  - nexo-id: purple_aurorite_shield
+    amount: 1
+  - nexo-id: purple_aurorite_crossbow
+    amount: 1
+  - nexo-id: purple_aurorite_bow
+    amount: 1

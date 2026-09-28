@@ -34,4 +34,10 @@ public interface VipStorage {
     Set<UUID> allPlayersWithActiveTier();
 
     void appendAudit(AuditEvent event);
+
+    /** Epoch millis of the last successful claim of this kit by this player, or empty if never claimed. */
+    java.util.Optional<Long> getKitClaimTime(UUID uuid, String kitId);
+
+    /** Records a successful claim (upsert). */
+    void recordKitClaim(UUID uuid, String kitId, long claimedAtMillis);
 }

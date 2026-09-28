@@ -6,7 +6,7 @@ author: misterioso013
 description: Multi-tier VIP subscription manager - banked time per tier, one active at a time, automatic expiry.
 
 depend: [LuckPerms]
-softdepend: [Vault, PlaceholderAPI]
+softdepend: [Vault, PlaceholderAPI, Nexo]
 
 commands:
   vip:

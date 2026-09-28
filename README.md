@@ -41,6 +41,9 @@ pick one active, the other paused" - see the server repo's
 | `/vipadmin info <player>` | Admin | Full balance dump, works offline |
 | `/vipadmin migrate` | Admin, once | Strips the old permanent tier groups from everyone (no time granted - see below) |
 | `/vipadmin reload` | Admin | Reloads config.yml |
+| `/vip kits` | Player | Opens the DeluxeMenus VIP kit screen (`dm open kitsvip`) |
+| `/vip kitclaim <tier> <periodo>` | Player (wired from `kitsvip.yml`'s left-click) | Checks active-tier rank + cooldown, delivers the kit |
+| `/vip kitpreview <tier> <periodo>` | Player (wired from `kitsvip.yml`'s right-click) | Opens a read-only inventory with the kit's real items |
 
 ## Placeholders (PlaceholderAPI)
 
@@ -64,6 +67,49 @@ its grant step changed from `lp user <player> parent set <tier>` to
 `vipadmin add <player> <tier> <duration>` - a raw `/lp` command bypasses this plugin
 entirely and will reintroduce the exact bug (no expiry, no multi-tier support) this
 project fixes.
+
+## VIP kit delivery (replaces PlayerKits2 for the 12 tier kits)
+
+The 4 tiers x 3 periods (diário/semanal/mensal) of VIP kits are handled entirely by
+this plugin now, not PlayerKits2 - PlayerKits2 stays installed only for the 3 free
+kits (novato/claim/fazendeiro), which are unrelated to VIP tiers and out of scope here.
+
+Why: every Aurorite armor piece used to be delivered via
+`console_command: nexo give <item> <amount> <player>` from a PlayerKits2 action - a
+plain string command with no compile-time safety, and it silently broke all 4 monthly
+kits at once when the argument order turned out to be wrong. `NexoItems` (see below)
+gives the same result with actual type checking. PlayerKits2's own kit-preview screen
+was also a dead end - opening it from the DeluxeMenus `kitsvip` menu left no way back
+without closing everything and re-running `/kitsvip`.
+
+- **Items**: `kit/KitRegistry` loads 12 YAML files (`src/main/resources/kits/*.yml`,
+  copied out to `plugins/VipManager/kits/` on first run, editable afterwards) - each
+  entry is either a vanilla `material` (with optional `enchants`, `firework-power`,
+  `potion-effect`/`extended`/`upgraded`) or a Nexo `nexo-id`. The bundled defaults are
+  an exact copy of what the replaced PlayerKits2 kits already gave.
+- **Nexo items are resolved via Nexo's real Java API**, not a console command:
+  `com.nexomc.nexo.api.NexoItems.optionalItemFromId(id)` → `ItemBuilder.build()` →
+  `ItemStack` (see `kit/KitItemResolver`). Confirmed by decompiling `nexo-1.28.jar` -
+  Nexo isn't published to any Maven repository, so the jar is vendored at `libs/` and
+  referenced as a `system`-scope, compile-only dependency (never shaded into the
+  output jar - Nexo is already on the server's own classpath at runtime).
+- **Access is by the player's active tier rank**, not a LuckPerms permission node -
+  `kit/KitService#hasAccess` asks the existing `VipService` "what's this player's
+  active tier" and compares rank, so a Rei can still claim a Barão kit (matching how
+  LuckPerms group inheritance already worked) without needing the old
+  `playerkits.kit.KIT*` permissions kept in sync by hand.
+- **Cooldowns** live in a new `kit_claims(uuid, kit_id, last_claimed_at)` table in the
+  same SQLite database.
+- **Preview** (`kit/KitPreviewMenu` + `KitPreviewListener`) opens a real, read-only
+  Bukkit inventory filled with the kit's actual resolved `ItemStack`s - Aurorite pieces
+  show their real skin, since these are genuine Nexo items, not placeholder icons. A
+  "Voltar" button in the last slot closes the preview and re-runs `dm open kitsvip` for
+  the player, returning them to the DeluxeMenus menu - no DeluxeMenus API dependency,
+  just dispatching the same command it uses to open itself
+  (`kits.menu-open-command` in config.yml).
+- `plugins/DeluxeMenus/gui_menus/kits/kitsvip.yml` in the server-config repo points its
+  12 buttons at `/vip kitclaim <tier> <periodo>` and `/vip kitpreview <tier> <periodo>`
+  instead of `playerkits claim/preview KIT<TIER><PERIODO>`.
 
 ## Building
 
@@ -91,7 +137,14 @@ src/main/java/com/forjacraft/vipmanager/
 ├── integration/                 - LuckPermsBridge, ClaimBlockBridge, PlaceholderAPI expansion
 ├── listener/                    - join-time reconciliation
 ├── task/                        - periodic sweep (expires tiers even for offline players)
-└── command/                     - /vip, /vipadmin, duration parsing
+├── kit/                         - VIP kit delivery: KitRegistry/KitDefinition/KitItemSpec
+│                                   (config), KitItemResolver (Nexo API + vanilla items),
+│                                   KitService (access/cooldown/delivery), KitPreviewMenu
+│                                   + KitPreviewListener (read-only preview GUI)
+└── command/                     - /vip (incl. kits/kitclaim/kitpreview), /vipadmin, duration parsing
+
+src/main/resources/kits/*.yml    - bundled default contents for all 12 VIP kits
+libs/nexo-1.28.jar               - vendored, not published anywhere - compile-only, never shaded
 ```
 
 `VipTimeMath` and `DurationParser` have no Bukkit/LuckPerms dependency and are unit

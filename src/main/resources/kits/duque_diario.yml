@@ -1,0 +1,20 @@
+cooldown-seconds: 86400
+items:
+  - material: GOLDEN_CARROT
+    amount: 32
+  - material: GOLDEN_APPLE
+    amount: 12
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - material: POTION
+    amount: 1
+    potion-effect: SPEED
+    extended: false
+    upgraded: true
+  - material: FIREWORK_ROCKET
+    amount: 64
+    firework-power: 3
+  - material: IRON_INGOT
+    amount: 24
+  - material: DIAMOND
+    amount: 2

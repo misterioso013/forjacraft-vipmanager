@@ -1,0 +1,85 @@
+cooldown-seconds: 2592000
+items:
+  - material: ELYTRA
+    amount: 1
+  - material: RED_SHULKER_BOX
+    amount: 2
+  - material: IRON_INGOT
+    amount: 48
+  - material: DIAMOND
+    amount: 32
+  - material: NETHERITE_UPGRADE_SMITHING_TEMPLATE
+    amount: 4
+  - material: SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE
+    amount: 4
+  - material: TOTEM_OF_UNDYING
+    amount: 4
+  - material: SPAWNER
+    amount: 1
+  - material: NETHERITE_INGOT
+    amount: 2
+  - material: SHIELD
+    amount: 1
+    enchants: ['UNBREAKING;2']
+  - material: FIREWORK_ROCKET
+    amount: 64
+    firework-power: 3
+  - material: FIREWORK_ROCKET
+    amount: 64
+    firework-power: 3
+  - material: FIREWORK_ROCKET
+    amount: 64
+    firework-power: 3
+  - material: FIREWORK_ROCKET
+    amount: 64
+    firework-power: 3
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - material: EXPERIENCE_BOTTLE
+    amount: 64
+  - nexo-id: red_aurorite_helmet
+    amount: 1
+  - nexo-id: red_aurorite_chestplate
+    amount: 1
+  - nexo-id: red_aurorite_leggings
+    amount: 1
+  - nexo-id: red_aurorite_boots
+    amount: 1
+  - nexo-id: red_aurorite_wall_banner
+    amount: 1
+  - nexo-id: red_aurorite_ground_banner
+    amount: 1
+  - nexo-id: red_aurorite_pickaxe
+    amount: 1
+  - nexo-id: red_aurorite_axe
+    amount: 1
+  - nexo-id: red_aurorite_shovel
+    amount: 1
+  - nexo-id: red_aurorite_hoe
+    amount: 1
+  - nexo-id: red_aurorite_fishing_rod
+    amount: 1
+  - nexo-id: red_aurorite_sword
+    amount: 1
+  - nexo-id: red_aurorite_macel
+    amount: 1
+  - nexo-id: red_aurorite_trident
+    amount: 1
+  - nexo-id: red_aurorite_spear
+    amount: 1
+  - nexo-id: red_aurorite_shield
+    amount: 1
+  - nexo-id: red_aurorite_crossbow
+    amount: 1
+  - nexo-id: red_aurorite_bow
+    amount: 1

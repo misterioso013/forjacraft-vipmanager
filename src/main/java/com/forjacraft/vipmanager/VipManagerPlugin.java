@@ -6,6 +6,10 @@ import com.forjacraft.vipmanager.config.VipConfig;
 import com.forjacraft.vipmanager.integration.ClaimBlockBridge;
 import com.forjacraft.vipmanager.integration.LuckPermsBridge;
 import com.forjacraft.vipmanager.integration.VipPlaceholderExpansion;
+import com.forjacraft.vipmanager.kit.KitItemResolver;
+import com.forjacraft.vipmanager.kit.KitPreviewListener;
+import com.forjacraft.vipmanager.kit.KitRegistry;
+import com.forjacraft.vipmanager.kit.KitService;
 import com.forjacraft.vipmanager.listener.PlayerJoinListener;
 import com.forjacraft.vipmanager.service.VipService;
 import com.forjacraft.vipmanager.storage.SqliteVipStorage;
@@ -45,7 +49,18 @@ public final class VipManagerPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(
                 new PlayerJoinListener(this, vipService, luckPermsBridge, vipConfig, getLogger()), this);
 
-        VipCommand vipCommand = new VipCommand(this, vipService, vipConfig);
+        if (Bukkit.getPluginManager().getPlugin("Nexo") == null) {
+            getLogger().warning("Nexo not found - VIP kit commands will still register, but any Nexo item in a "
+                    + "kit will fail to resolve until Nexo is installed.");
+        }
+        KitRegistry kitRegistry = new KitRegistry(this);
+        kitRegistry.load();
+        KitItemResolver kitItemResolver = new KitItemResolver(getLogger());
+        KitService kitService = new KitService(kitRegistry, kitItemResolver, vipService, storage, getLogger());
+        getServer().getPluginManager().registerEvents(
+                new KitPreviewListener(this, vipConfig.kitsMenuOpenCommand()), this);
+
+        VipCommand vipCommand = new VipCommand(this, vipService, vipConfig, kitService);
         var vipPluginCommand = getCommand("vip");
         if (vipPluginCommand != null) {
             vipPluginCommand.setExecutor(vipCommand);
