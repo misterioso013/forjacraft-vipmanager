@@ -1,0 +1,24 @@
+one-time: false
+cooldown-seconds: 300
+items:
+  - material: GOLDEN_SHOVEL
+    amount: 1
+    display-name: '&6Pá de Claim'
+    lore:
+      - '&7Clique em 2 cantos para'
+      - '&7proteger seu terreno'
+  - material: STICK
+    amount: 1
+    display-name: '&ePau de Inspeção'
+    lore:
+      - '&7Clique num bloco para ver'
+      - '&7de quem é a claim'
+  - material: PAPER
+    amount: 1
+    display-name: '&bGuia de Claims'
+    lore:
+      - '&7/claimlist &8- &7suas claims'
+      - '&7/trust <amigo> &8- &7dar acesso'
+      - '&7/untrust <amigo> &8- &7remover'
+      - '&7/abandonclaim &8- &7desfazer'
+      - '&7/buyclaimblocks <qtd> &8- &7R$25/bloco'

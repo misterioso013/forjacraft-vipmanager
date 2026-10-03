@@ -35,9 +35,24 @@ public interface VipStorage {
 
     void appendAudit(AuditEvent event);
 
-    /** Epoch millis of the last successful claim of this kit by this player, or empty if never claimed. */
+    /**
+     * Epoch millis of the last successful claim of this kit by this player, or empty if never claimed.
+     * Wall-clock based - only used by {@link com.forjacraft.vipmanager.kit.FreeKitService} (kits with
+     * no tier/active concept). VIP tier kits use {@link #getKitCooldown} instead.
+     */
     java.util.Optional<Long> getKitClaimTime(UUID uuid, String kitId);
 
-    /** Records a successful claim (upsert). */
+    /** Records a successful claim (upsert). Same scope note as {@link #getKitClaimTime}. */
     void recordKitClaim(UUID uuid, String kitId, long claimedAtMillis);
+
+    /**
+     * A VIP tier kit's cooldown, modeled the same way a tier's own VIP balance is
+     * ({@code bankedSeconds} = cooldown seconds remaining, ticking down only while
+     * {@code active} - i.e. only while the kit's owning tier is the active one).
+     * Empty if the kit was never claimed. See {@link com.forjacraft.vipmanager.kit.KitCooldownSync}.
+     */
+    java.util.Optional<TierState> getKitCooldown(UUID uuid, String kitId);
+
+    /** Upserts a single kit's cooldown row for a player. */
+    void saveKitCooldown(UUID uuid, String kitId, TierState state);
 }

@@ -10,22 +10,23 @@ import org.bukkit.plugin.Plugin;
 
 /**
  * Makes {@link KitPreviewMenu} read-only and wires its "Voltar" button back to
- * the DeluxeMenus kitsvip screen via the same command DeluxeMenus itself uses
- * to open it - no DeluxeMenus API dependency needed, just dispatching its command.
+ * whichever DeluxeMenus screen that particular preview should return to
+ * (kitsvip for a VIP tier kit, the general kits menu for a free kit) - each
+ * {@link KitPreviewMenu} instance carries its own back command, so one
+ * listener instance serves both. No DeluxeMenus API dependency needed, just
+ * dispatching the same command DeluxeMenus itself uses to open the menu.
  */
 public final class KitPreviewListener implements Listener {
 
     private final Plugin plugin;
-    private final String kitsMenuOpenCommand;
 
-    public KitPreviewListener(Plugin plugin, String kitsMenuOpenCommand) {
+    public KitPreviewListener(Plugin plugin) {
         this.plugin = plugin;
-        this.kitsMenuOpenCommand = kitsMenuOpenCommand;
     }
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (!(event.getInventory().getHolder() instanceof KitPreviewMenu)) {
+        if (!(event.getInventory().getHolder() instanceof KitPreviewMenu menu)) {
             return;
         }
         event.setCancelled(true);
@@ -41,7 +42,7 @@ public final class KitPreviewListener implements Listener {
         }
 
         player.closeInventory();
-        Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(player, kitsMenuOpenCommand));
+        Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(player, menu.backCommand()));
     }
 
     @EventHandler

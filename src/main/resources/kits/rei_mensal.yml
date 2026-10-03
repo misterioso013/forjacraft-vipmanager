@@ -2,25 +2,18 @@ cooldown-seconds: 2592000
 items:
   - material: ELYTRA
     amount: 1
+    enchants: ['UNBREAKING;4', 'MENDING']
   - material: RED_SHULKER_BOX
     amount: 2
+    display-name: '&cShulker Rei'
   - material: IRON_INGOT
     amount: 48
   - material: DIAMOND
     amount: 32
-  - material: NETHERITE_UPGRADE_SMITHING_TEMPLATE
-    amount: 4
-  - material: SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE
-    amount: 4
   - material: TOTEM_OF_UNDYING
     amount: 4
   - material: SPAWNER
-    amount: 1
-  - material: NETHERITE_INGOT
-    amount: 2
-  - material: SHIELD
-    amount: 1
-    enchants: ['UNBREAKING;2']
+    amount: 4
   - material: FIREWORK_ROCKET
     amount: 64
     firework-power: 3

@@ -1,5 +1,6 @@
 package com.forjacraft.vipmanager.integration;
 
+import com.forjacraft.vipmanager.bedrock.BedrockMenuService;
 import com.forjacraft.vipmanager.config.VipConfig;
 import com.forjacraft.vipmanager.service.TierState;
 import com.forjacraft.vipmanager.service.VipService;
@@ -20,10 +21,12 @@ public final class VipPlaceholderExpansion extends PlaceholderExpansion {
 
     private final VipService vipService;
     private final VipConfig config;
+    private final BedrockMenuService bedrock;
 
-    public VipPlaceholderExpansion(VipService vipService, VipConfig config) {
+    public VipPlaceholderExpansion(VipService vipService, VipConfig config, BedrockMenuService bedrock) {
         this.vipService = vipService;
         this.config = config;
+        this.bedrock = bedrock;
     }
 
     @Override
@@ -50,6 +53,10 @@ public final class VipPlaceholderExpansion extends PlaceholderExpansion {
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         if (player == null) {
             return "";
+        }
+        // Answered before touching storage: DeluxeMenus asks this on every menu open.
+        if (params.equals("is_bedrock")) {
+            return String.valueOf(bedrock.isBedrock(player.getUniqueId()));
         }
         Map<String, TierState> balances = vipService.peekBalances(player.getUniqueId());
         long now = System.currentTimeMillis();

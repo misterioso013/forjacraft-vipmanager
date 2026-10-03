@@ -91,6 +91,17 @@ public final class SqliteVipStorage implements VipStorage {
                         PRIMARY KEY (uuid, kit_id)
                     )
                     """);
+            st.execute("""
+                    CREATE TABLE IF NOT EXISTS kit_cooldowns (
+                        uuid              TEXT    NOT NULL,
+                        kit_id            TEXT    NOT NULL,
+                        remaining_seconds INTEGER NOT NULL DEFAULT 0,
+                        active            INTEGER NOT NULL DEFAULT 0,
+                        active_since      INTEGER,
+                        updated_at        INTEGER NOT NULL,
+                        PRIMARY KEY (uuid, kit_id)
+                    )
+                    """);
         }
     }
 
@@ -225,6 +236,59 @@ public final class SqliteVipStorage implements VipStorage {
                 ps.executeUpdate();
             } catch (SQLException e) {
                 throw new IllegalStateException("Failed to record kit claim for " + uuid + "/" + kitId, e);
+            }
+        }
+    }
+
+    @Override
+    public java.util.Optional<TierState> getKitCooldown(UUID uuid, String kitId) {
+        synchronized (lock) {
+            String sql = "SELECT remaining_seconds, active, active_since FROM kit_cooldowns WHERE uuid = ? AND kit_id = ?";
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                ps.setString(2, kitId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (!rs.next()) {
+                        return java.util.Optional.empty();
+                    }
+                    long remaining = rs.getLong("remaining_seconds");
+                    boolean active = rs.getInt("active") != 0;
+                    long activeSinceRaw = rs.getLong("active_since");
+                    Long activeSince = rs.wasNull() ? null : activeSinceRaw;
+                    return java.util.Optional.of(new TierState(remaining, active, activeSince));
+                }
+            } catch (SQLException e) {
+                throw new IllegalStateException("Failed to read kit cooldown for " + uuid + "/" + kitId, e);
+            }
+        }
+    }
+
+    @Override
+    public void saveKitCooldown(UUID uuid, String kitId, TierState state) {
+        synchronized (lock) {
+            String sql = """
+                    INSERT INTO kit_cooldowns (uuid, kit_id, remaining_seconds, active, active_since, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    ON CONFLICT(uuid, kit_id) DO UPDATE SET
+                        remaining_seconds = excluded.remaining_seconds,
+                        active = excluded.active,
+                        active_since = excluded.active_since,
+                        updated_at = excluded.updated_at
+                    """;
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1, uuid.toString());
+                ps.setString(2, kitId);
+                ps.setLong(3, state.bankedSeconds());
+                ps.setInt(4, state.active() ? 1 : 0);
+                if (state.activeSince() != null) {
+                    ps.setLong(5, state.activeSince());
+                } else {
+                    ps.setNull(5, java.sql.Types.INTEGER);
+                }
+                ps.setLong(6, System.currentTimeMillis());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                throw new IllegalStateException("Failed to save kit cooldown for " + uuid + "/" + kitId, e);
             }
         }
     }

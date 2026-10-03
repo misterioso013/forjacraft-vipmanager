@@ -71,4 +71,23 @@ public final class DurationParser {
         sb.append(seconds).append("s");
         return sb.toString().trim();
     }
+
+    /**
+     * Formats seconds as days/hours only (rounding the rest up into the hour), e.g.
+     * "29d 14h" or "3h". Used for long cooldown messages (kit cooldowns run up to 30
+     * days) where minute/second precision is just noise.
+     */
+    public static String formatDaysHours(long totalSeconds) {
+        if (totalSeconds <= 0) {
+            return "0h";
+        }
+        long roundedUpHours = (totalSeconds + 3599L) / 3600L;
+        long days = roundedUpHours / 24L;
+        long hours = roundedUpHours % 24L;
+
+        StringBuilder sb = new StringBuilder();
+        if (days > 0) sb.append(days).append("d ");
+        sb.append(hours).append("h");
+        return sb.toString().trim();
+    }
 }

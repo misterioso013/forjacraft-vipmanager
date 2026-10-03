@@ -1,0 +1,6 @@
+one-time: false
+cooldown-seconds: 3600
+items:
+  - material: COOKIE
+    amount: 32
+    display-name: '&6&lCookie Yu'

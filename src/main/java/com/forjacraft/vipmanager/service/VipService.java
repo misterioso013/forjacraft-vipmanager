@@ -32,6 +32,8 @@ public final class VipService {
     private final LuckPermsBridge luckPerms;
     private final ClaimBlockBridge claimBlocks;
     private final Logger logger;
+    private TierActivationListener tierActivationListener = (uuid, tierId, active, now) -> {
+    };
 
     public VipService(VipConfig config, VipStorage storage, LuckPermsBridge luckPerms,
                        ClaimBlockBridge claimBlocks, Logger logger) {
@@ -40,6 +42,22 @@ public final class VipService {
         this.luckPerms = luckPerms;
         this.claimBlocks = claimBlocks;
         this.logger = logger;
+    }
+
+    /**
+     * Notified whenever a tier's active flag flips, on both sides of the
+     * transition (the tier going inactive fires once, the tier going active
+     * fires once). Set post-construction (default is a no-op) so this class
+     * doesn't need a compile-time dependency on whatever cares about tier
+     * transitions - currently {@code kit/KitCooldownSync}, which needs this to
+     * freeze/resume VIP kit cooldowns in lockstep with the owning tier.
+     */
+    public interface TierActivationListener {
+        void onTierActivation(UUID uuid, String tierId, boolean active, long nowMillis);
+    }
+
+    public void setTierActivationListener(TierActivationListener listener) {
+        this.tierActivationListener = listener;
     }
 
     /** Read-only, non-persisting view of a player's current balances (for /vip status, placeholders). */
@@ -114,12 +132,14 @@ public final class VipService {
             VipTimeMath.ReconcileResult deactivated = VipTimeMath.deactivate(currentActive.get().getValue(), now);
             storage.saveBalance(uuid, oldTierId, deactivated.state());
             claimDelta -= tierBonus(oldTierId);
+            tierActivationListener.onTierActivation(uuid, oldTierId, false, now);
         }
 
         TierState activated = VipTimeMath.activate(target, now);
         storage.saveBalance(uuid, tierId, activated);
         storage.appendAudit(new AuditEvent(uuid, tierId, AuditEvent.Type.SWITCH, null,
                 activated.bankedSeconds(), AuditEvent.Source.ADMIN_INGAME, uuid.toString(), now));
+        tierActivationListener.onTierActivation(uuid, tierId, true, now);
 
         TierDefinition tierDef = config.tier(tierId).orElseThrow();
         awaitLuckPerms(luckPerms.setActiveGroup(uuid, tierDef.luckPermsGroup()), uuid);
@@ -157,6 +177,7 @@ public final class VipService {
 
         // Expired - persist the zeroed-out state, then look for a fallback.
         storage.saveBalance(uuid, activeTierId, result.state());
+        tierActivationListener.onTierActivation(uuid, activeTierId, false, now);
         long expiredBonus = tierBonus(activeTierId);
 
         Optional<TierDefinition> fallback = config.tiersHighestFirst().stream()
@@ -171,6 +192,7 @@ public final class VipService {
             TierDefinition fallbackTier = fallback.get();
             TierState fallbackState = VipTimeMath.activate(balances.get(fallbackTier.id()), now);
             storage.saveBalance(uuid, fallbackTier.id(), fallbackState);
+            tierActivationListener.onTierActivation(uuid, fallbackTier.id(), true, now);
             storage.appendAudit(new AuditEvent(uuid, activeTierId, AuditEvent.Type.EXPIRE_FALLBACK, null,
                     0L, AuditEvent.Source.SYSTEM_SWEEP, "SYSTEM", now));
 
@@ -235,6 +257,7 @@ public final class VipService {
         TierState fresh = storage.loadBalances(uuid).getOrDefault(tierId, state);
         TierState activated = VipTimeMath.activate(fresh, now);
         storage.saveBalance(uuid, tierId, activated);
+        tierActivationListener.onTierActivation(uuid, tierId, true, now);
 
         TierDefinition tierDef = config.tier(tierId).orElseThrow();
         awaitLuckPerms(luckPerms.setActiveGroup(uuid, tierDef.luckPermsGroup()), uuid);

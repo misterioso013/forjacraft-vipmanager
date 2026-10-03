@@ -47,4 +47,14 @@ class DurationParserTest {
         assertEquals("5m 0s", DurationParser.format(300));
         assertEquals("1d 0h 0m 0s", DurationParser.format(86_400));
     }
+
+    @Test
+    void formatsDaysHoursOnly() {
+        assertEquals("0h", DurationParser.formatDaysHours(0));
+        assertEquals("1h", DurationParser.formatDaysHours(1));
+        assertEquals("1h", DurationParser.formatDaysHours(3600));
+        assertEquals("2h", DurationParser.formatDaysHours(3601));
+        assertEquals("29d 14h", DurationParser.formatDaysHours(29L * 86_400L + 14L * 3600L));
+        assertEquals("1d 0h", DurationParser.formatDaysHours(86_400));
+    }
 }

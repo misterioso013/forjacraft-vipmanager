@@ -1,6 +1,8 @@
 package com.forjacraft.vipmanager.kit;
 
+import com.forjacraft.vipmanager.service.TierState;
 import com.forjacraft.vipmanager.service.VipService;
+import com.forjacraft.vipmanager.service.VipTimeMath;
 import com.forjacraft.vipmanager.storage.VipStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -14,11 +16,15 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
- * Kit access (by the player's ACTIVE tier rank - matches how LuckPerms group
- * inheritance already works: only the active tier's benefits apply, and it
- * inherits everything at or below its own rank), cooldown enforcement, and
- * delivery. Replaces PlayerKits2 for the 12 tier-based VIP kits; the free
- * kits (novato/claim/fazendeiro) are untouched and stay on PlayerKits2.
+ * Kit access (by the player's ACTIVE tier - EXACT match only, not "at or
+ * above"), cooldown enforcement, and delivery. A player can only claim the
+ * kit matching their own active tier - kits carry real, tier-differentiated
+ * rewards (a distinct Aurorite color, escalating consumables) each on its own
+ * independent cooldown, so letting a higher tier also claim every lower
+ * tier's kit would let them stack all 4 tiers' rewards at once. This
+ * deliberately does NOT mirror LuckPerms group inheritance (which still
+ * applies for passive perks like homes/discounts) - kit access and
+ * permission inheritance are unrelated on purpose.
  */
 public final class KitService {
 
@@ -47,13 +53,10 @@ public final class KitService {
         }
     }
 
-    /** Whether the player's currently active tier is this kit's tier or higher. */
+    /** Whether the player's currently active tier is exactly this kit's tier. */
     public boolean hasAccess(UUID uuid, String tier) {
         Optional<String> activeTier = vipService.peekActiveTier(uuid);
-        if (activeTier.isEmpty()) {
-            return false;
-        }
-        return registry.tierRank(activeTier.get()) >= registry.tierRank(tier);
+        return activeTier.isPresent() && activeTier.get().equals(tier);
     }
 
     public ClaimOutcome claim(UUID uuid, String tier, String period) {
@@ -68,24 +71,26 @@ public final class KitService {
         }
 
         long now = System.currentTimeMillis();
-        Optional<Long> lastClaim = storage.getKitClaimTime(uuid, kit.kitId());
-        if (lastClaim.isPresent()) {
-            long elapsedSeconds = (now - lastClaim.get()) / 1000L;
-            long remaining = kit.cooldownSeconds() - elapsedSeconds;
-            if (remaining > 0) {
-                return new ClaimOutcome(ClaimResult.ON_COOLDOWN, remaining);
+        Optional<TierState> cooldown = storage.getKitCooldown(uuid, kit.kitId());
+        if (cooldown.isPresent() && cooldown.get().bankedSeconds() > 0) {
+            TierState state = cooldown.get();
+            // Defensive self-heal: hasAccess() above already proved this tier is active
+            // right now, so if the stored cooldown still says inactive (a missed
+            // transition, or old data), resume it before reconciling rather than
+            // leaving it frozen forever.
+            if (!state.active()) {
+                state = VipTimeMath.activate(state, now);
+            }
+            VipTimeMath.ReconcileResult result = VipTimeMath.reconcile(state, now);
+            if (!result.expired()) {
+                storage.saveKitCooldown(uuid, kit.kitId(), result.state());
+                return new ClaimOutcome(ClaimResult.ON_COOLDOWN, result.state().bankedSeconds());
             }
         }
 
         // Resolve all items up front (atomic - resolve failures for individual Nexo
         // items are logged but don't block the rest; only a genuine space shortage aborts).
-        List<ItemStack> resolved = new ArrayList<>();
-        for (KitItemSpec spec : kit.items()) {
-            resolver.resolve(spec).ifPresentOrElse(
-                    resolved::add,
-                    () -> logger.warning("Kit '" + kit.kitId() + "': item spec " + spec + " did not resolve - skipped for " + uuid)
-            );
-        }
+        List<KitDelivery.ResolvedItem> resolved = KitDelivery.resolveAll(resolver, kit.items(), kit.kitId(), uuid, logger);
 
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
         Player player = offlinePlayer.getPlayer();
@@ -95,26 +100,15 @@ public final class KitService {
             return ClaimOutcome.of(ClaimResult.UNKNOWN_KIT);
         }
 
-        if (!hasSpaceFor(player, resolved)) {
+        if (!KitDelivery.hasSpaceFor(player, resolved)) {
             return ClaimOutcome.of(ClaimResult.NOT_ENOUGH_SPACE);
         }
 
-        for (ItemStack stack : resolved) {
-            player.getInventory().addItem(stack);
-        }
-        storage.recordKitClaim(uuid, kit.kitId(), now);
+        KitDelivery.give(player, resolved);
+        // hasAccess() already proved this tier is active right now, so the fresh
+        // cooldown starts out active/ticking immediately.
+        storage.saveKitCooldown(uuid, kit.kitId(), TierState.activeSince(kit.cooldownSeconds(), now));
         return ClaimOutcome.of(ClaimResult.SUCCESS);
-    }
-
-    /** Rough check: enough free slots to hold every item, one slot each (doesn't try to stack into partial slots). */
-    private boolean hasSpaceFor(Player player, List<ItemStack> items) {
-        int freeSlots = 0;
-        for (ItemStack slot : player.getInventory().getStorageContents()) {
-            if (slot == null || slot.getType().isAir()) {
-                freeSlots++;
-            }
-        }
-        return freeSlots >= items.size();
     }
 
     /** For the preview GUI: the resolved item list without claiming anything or touching cooldowns. */

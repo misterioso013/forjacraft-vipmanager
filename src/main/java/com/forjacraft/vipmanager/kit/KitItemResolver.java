@@ -1,10 +1,14 @@
 package com.forjacraft.vipmanager.kit;
 
 import com.nexomc.nexo.api.NexoItems;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionType;
 
@@ -55,6 +59,26 @@ public final class KitItemResolver {
         Material material = Material.valueOf(vanilla.material().toUpperCase(Locale.ROOT));
         ItemStack stack = new ItemStack(material, vanilla.amount());
 
+        boolean hasDisplayName = vanilla.displayName() != null && !vanilla.displayName().isBlank();
+        boolean hasLore = vanilla.lore() != null && !vanilla.lore().isEmpty();
+        if (hasDisplayName || hasLore) {
+            ItemMeta meta = stack.getItemMeta();
+            if (meta != null) {
+                if (hasDisplayName) {
+                    meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', vanilla.displayName()));
+                }
+                if (hasLore) {
+                    meta.setLore(vanilla.lore().stream()
+                            .map(line -> ChatColor.translateAlternateColorCodes('&', line))
+                            .toList());
+                }
+                stack.setItemMeta(meta);
+            }
+        }
+        if (vanilla.leatherColor() != null && stack.getItemMeta() instanceof LeatherArmorMeta leatherMeta) {
+            leatherMeta.setColor(Color.fromRGB(vanilla.leatherColor()));
+            stack.setItemMeta(leatherMeta);
+        }
         if (vanilla.enchants() != null && !vanilla.enchants().isEmpty()) {
             applyEnchants(stack, vanilla.enchants());
         }

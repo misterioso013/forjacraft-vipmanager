@@ -25,14 +25,21 @@ public final class KitPreviewMenu implements InventoryHolder {
     private static final int BACK_BUTTON_SLOT_OFFSET_FROM_END = 1;
 
     private final Inventory inventory;
+    private final String backCommand;
 
-    private KitPreviewMenu(int size, String title) {
+    private KitPreviewMenu(int size, String title, String backCommand) {
         this.inventory = Bukkit.createInventory(this, size, title);
+        this.backCommand = backCommand;
     }
 
+    /** VIP tier kit preview - always returns to the kitsvip DeluxeMenus screen. */
     public static KitPreviewMenu open(Player player, KitDefinition kit, List<ItemStack> items) {
+        return open(player, previewTitle(kit), items, "dm open kitsvip");
+    }
+
+    public static KitPreviewMenu open(Player player, String title, List<ItemStack> items, String backCommand) {
         int size = roundUpToRowMultiple(items.size() + 9); // spare row for the back button
-        KitPreviewMenu menu = new KitPreviewMenu(size, previewTitle(kit));
+        KitPreviewMenu menu = new KitPreviewMenu(size, title, backCommand);
 
         for (ItemStack item : items) {
             menu.inventory.addItem(item.clone());
@@ -41,6 +48,10 @@ public final class KitPreviewMenu implements InventoryHolder {
 
         player.openInventory(menu.inventory);
         return menu;
+    }
+
+    String backCommand() {
+        return backCommand;
     }
 
     private static String previewTitle(KitDefinition kit) {

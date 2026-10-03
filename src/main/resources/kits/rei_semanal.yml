@@ -1,9 +1,7 @@
 cooldown-seconds: 604800
 items:
   - material: ENCHANTED_GOLDEN_APPLE
-    amount: 16
-  - material: GOLDEN_CARROT
-    amount: 64
+    amount: 8
   - material: GOLDEN_CARROT
     amount: 64
   - material: ENDER_PEARL

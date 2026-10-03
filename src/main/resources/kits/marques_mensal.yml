@@ -4,16 +4,13 @@ items:
     amount: 1
   - material: PURPLE_SHULKER_BOX
     amount: 1
+    display-name: '&dShulker Marquês'
   - material: IRON_INGOT
     amount: 16
-  - material: NETHERITE_UPGRADE_SMITHING_TEMPLATE
-    amount: 2
-  - material: SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE
-    amount: 4
-  - material: NETHERITE_SCRAP
-    amount: 4
   - material: TOTEM_OF_UNDYING
-    amount: 1
+    amount: 2
+  - material: SPAWNER
+    amount: 2
   - material: FIREWORK_ROCKET
     amount: 64
     firework-power: 3
@@ -24,43 +21,39 @@ items:
     amount: 64
   - material: EXPERIENCE_BOTTLE
     amount: 64
-  - material: EXPERIENCE_BOTTLE
-    amount: 64
-  - material: EXPERIENCE_BOTTLE
-    amount: 64
-  - nexo-id: aurorite_helmet
+  - nexo-id: purple_aurorite_helmet
     amount: 1
-  - nexo-id: aurorite_chestplate
+  - nexo-id: purple_aurorite_chestplate
     amount: 1
-  - nexo-id: aurorite_leggings
+  - nexo-id: purple_aurorite_leggings
     amount: 1
-  - nexo-id: aurorite_boots
+  - nexo-id: purple_aurorite_boots
     amount: 1
-  - nexo-id: aurorite_wall_banner
+  - nexo-id: purple_aurorite_wall_banner
     amount: 1
-  - nexo-id: aurorite_ground_banner
+  - nexo-id: purple_aurorite_ground_banner
     amount: 1
-  - nexo-id: aurorite_pickaxe
+  - nexo-id: purple_aurorite_pickaxe
     amount: 1
-  - nexo-id: aurorite_axe
+  - nexo-id: purple_aurorite_axe
     amount: 1
-  - nexo-id: aurorite_shovel
+  - nexo-id: purple_aurorite_shovel
     amount: 1
-  - nexo-id: aurorite_hoe
+  - nexo-id: purple_aurorite_hoe
     amount: 1
-  - nexo-id: aurorite_fishing_rod
+  - nexo-id: purple_aurorite_fishing_rod
     amount: 1
-  - nexo-id: aurorite_sword
+  - nexo-id: purple_aurorite_sword
     amount: 1
-  - nexo-id: aurorite_macel
+  - nexo-id: purple_aurorite_macel
     amount: 1
-  - nexo-id: aurorite_trident
+  - nexo-id: purple_aurorite_trident
     amount: 1
-  - nexo-id: aurorite_spear
+  - nexo-id: purple_aurorite_spear
     amount: 1
-  - nexo-id: aurorite_shield
+  - nexo-id: purple_aurorite_shield
     amount: 1
-  - nexo-id: aurorite_crossbow
+  - nexo-id: purple_aurorite_crossbow
     amount: 1
-  - nexo-id: aurorite_bow
+  - nexo-id: purple_aurorite_bow
     amount: 1

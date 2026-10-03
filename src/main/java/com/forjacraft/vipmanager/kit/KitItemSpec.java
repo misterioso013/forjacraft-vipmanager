@@ -18,7 +18,11 @@ public sealed interface KitItemSpec {
             Integer fireworkPower,
             String potionEffect,
             boolean potionExtended,
-            boolean potionUpgraded
+            boolean potionUpgraded,
+            String displayName,
+            List<String> lore,
+            Integer leatherColor,
+            boolean offhand
     ) implements KitItemSpec {
     }
 

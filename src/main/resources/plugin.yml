@@ -6,7 +6,10 @@ author: misterioso013
 description: Multi-tier VIP subscription manager - banked time per tier, one active at a time, automatic expiry.
 
 depend: [LuckPerms]
-softdepend: [Vault, PlaceholderAPI, Nexo]
+# PlayerKits2 is a softdepend (not just "nice if present") specifically so this
+# plugin loads AFTER it - both declare a "kit" command, and Bukkit lets the
+# later-registered plugin win the unprefixed name. See KitCommand's class docs.
+softdepend: [Vault, PlaceholderAPI, Nexo, PlayerKits2, floodgate]
 
 commands:
   vip:
@@ -17,6 +20,15 @@ commands:
     description: Administer VIP tier balances.
     usage: /<command> <add|remove|set|activate|info|migrate|reload> ...
     permission: vipmanager.admin.*
+  bedrockmenu:
+    description: Open the native Bedrock form for a menu.
+    usage: /<command> <menu> [player]
+    permission: vipmanager.admin.bedrockmenu
+  kit:
+    aliases: [kits]
+    description: Claim a free kit, preview one, or open the kits menu.
+    usage: /<command> [vip|preview <kit>|<kit>]
+    permission: vipmanager.command.kit
 
 permissions:
   vipmanager.command.status:
@@ -24,6 +36,9 @@ permissions:
     default: true
   vipmanager.command.switch:
     description: Switch active VIP tier (/vip switch)
+    default: true
+  vipmanager.command.kit:
+    description: Claim/preview free kits and open the kits menu (/kit, /kits)
     default: true
   vipmanager.bypass.switchcooldown:
     description: Bypass the cooldown between /vip switch uses
@@ -39,6 +54,9 @@ permissions:
       vipmanager.admin.info: true
       vipmanager.admin.migrate: true
       vipmanager.admin.reload: true
+  vipmanager.admin.bedrockmenu:
+    description: Open a Bedrock form for a player (used by the DeluxeMenus redirect via console)
+    default: op
   vipmanager.admin.add:
     description: Add banked time to a player's tier
     default: op

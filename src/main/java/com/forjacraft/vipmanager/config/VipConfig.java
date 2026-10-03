@@ -28,6 +28,7 @@ public final class VipConfig {
     private volatile int switchCooldownSeconds = 60;
     private volatile String noTierPlaceholder = "none";
     private volatile String kitsMenuOpenCommand = "dm open kitsvip";
+    private volatile String kitsGeneralMenuOpenCommand = "dm open kits";
     private volatile Map<String, String> messages = Collections.emptyMap();
 
     public VipConfig(FileConfiguration file) {
@@ -73,6 +74,7 @@ public final class VipConfig {
         this.switchCooldownSeconds = file.getInt("switch.cooldown-seconds", 60);
         this.noTierPlaceholder = file.getString("no-tier-placeholder", "none");
         this.kitsMenuOpenCommand = file.getString("kits.menu-open-command", "dm open kitsvip");
+        this.kitsGeneralMenuOpenCommand = file.getString("kits.general-menu-open-command", "dm open kits");
         this.messages = Collections.unmodifiableMap(newMessages);
     }
 
@@ -110,6 +112,10 @@ public final class VipConfig {
 
     public String kitsMenuOpenCommand() {
         return kitsMenuOpenCommand;
+    }
+
+    public String kitsGeneralMenuOpenCommand() {
+        return kitsGeneralMenuOpenCommand;
     }
 
     public String message(String key) {

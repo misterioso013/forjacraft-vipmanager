@@ -83,34 +83,12 @@ public final class KitRegistry {
         List<KitItemSpec> items = new ArrayList<>();
         List<Map<?, ?>> itemMaps = yaml.getMapList("items");
         for (Map<?, ?> raw : itemMaps) {
-            KitItemSpec spec = parseItem(raw, tier, period);
+            KitItemSpec spec = KitItemSpecParser.parse(raw, tier + "_" + period + ".yml", logger);
             if (spec != null) {
                 items.add(spec);
             }
         }
         return new KitDefinition(tier, period, cooldownSeconds, List.copyOf(items));
-    }
-
-    @SuppressWarnings("unchecked")
-    private KitItemSpec parseItem(Map<?, ?> raw, String tier, String period) {
-        Map<String, Object> map = (Map<String, Object>) raw;
-        int amount = map.containsKey("amount") ? ((Number) map.get("amount")).intValue() : 1;
-
-        if (map.containsKey("nexo-id")) {
-            return new KitItemSpec.Nexo((String) map.get("nexo-id"), amount);
-        }
-        if (map.containsKey("material")) {
-            List<String> enchants = (List<String>) map.getOrDefault("enchants", List.of());
-            Integer fireworkPower = map.containsKey("firework-power")
-                    ? ((Number) map.get("firework-power")).intValue() : null;
-            String potionEffect = (String) map.get("potion-effect");
-            boolean extended = Boolean.TRUE.equals(map.get("extended"));
-            boolean upgraded = Boolean.TRUE.equals(map.get("upgraded"));
-            return new KitItemSpec.Vanilla((String) map.get("material"), amount, enchants,
-                    fireworkPower, potionEffect, extended, upgraded);
-        }
-        logger.warning("Kit item with neither 'material' nor 'nexo-id' in " + tier + "_" + period + ".yml - skipping: " + raw);
-        return null;
     }
 
     public java.util.Optional<KitDefinition> get(String tier, String period) {

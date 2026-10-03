@@ -22,8 +22,20 @@ tiers:
     displayName: '&cRei'
 
 storage:
-  # sqlite is the only implementation shipped in v1.
+  # sqlite (default): one local file, plugins/VipManager/vipmanager.db - fine as long
+  # as this plugin only ever runs on a single backend server.
+  # mysql: shared database, needed once the network splits into separate backend
+  # hosts per map (e.g. lobby/world/recursos behind a proxy) so every host reads/
+  # writes the SAME VIP balance/kit-claim state instead of each host having its own
+  # isolated copy. See MysqlVipStorage's class docs for a caveat about LuckPerms
+  # group sync across hosts - this setting alone does not solve that part.
   type: sqlite
+  mysql:
+    host: localhost
+    port: 3306
+    database: vipmanager
+    username: vipmanager
+    password: ''
 
 sweep:
   # How often the background task reconciles every player with an active tier
@@ -40,6 +52,11 @@ kits:
   # button in the kit preview GUI. Matches kitsvip.yml's open_command in the
   # server-config repo.
   menu-open-command: 'dm open kitsvip'
+  # Command run to open the general kits menu (novato/claim/fazendeiro/comida +
+  # the VIP category) - used by "/kit" and "/kits" with no argument, and to
+  # return the player there from a free kit's preview "Voltar" button. Matches
+  # principal.yml's open_command in the server-config repo.
+  general-menu-open-command: 'dm open kits'
 
 # Placeholder used by %vipmanager_active_tier% (and friends) when a player
 # owns no tier with time remaining.
@@ -63,7 +80,8 @@ messages:
   expired: '&cSeu VIP &f%tier% &cexpirou.'
   expired-fallback: '&cSeu VIP &f%tier% &cexpirou. Ativado automaticamente: &f%fallback%&c.'
   kit-unknown: '&cKit desconhecido.'
-  kit-tier-too-low: '&cVocê precisa do tier &f%tier% &cou superior (ativo) pra resgatar esse kit.'
+  kit-tier-too-low: '&cVocê precisa estar com o tier &f%tier% &cativo pra resgatar esse kit (kits não acumulam entre tiers).'
   kit-on-cooldown: '&cVocê já resgatou esse kit. Espere mais &f%time%&c.'
   kit-no-space: '&cSeu inventário não tem espaço suficiente pra esse kit. Abra espaço e tente de novo.'
   kit-claimed: '&aKit resgatado com sucesso!'
+  kit-already-claimed: '&cVocê já resgatou esse kit - ele só pode ser resgatado uma vez.'

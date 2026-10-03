@@ -1,22 +1,17 @@
 cooldown-seconds: 2592000
 items:
-  - material: YELLOW_SHULKER_BOX
+  - material: ELYTRA
     amount: 1
-  - material: IRON_INGOT
-    amount: 8
-  - material: NETHERITE_UPGRADE_SMITHING_TEMPLATE
+  - material: LIME_SHULKER_BOX
     amount: 1
-  - material: DUNE_ARMOR_TRIM_SMITHING_TEMPLATE
-    amount: 4
+    display-name: '&aShulker Barão'
+  - material: TOTEM_OF_UNDYING
+    amount: 1
+  - material: SPAWNER
+    amount: 1
   - material: FIREWORK_ROCKET
     amount: 64
     firework-power: 3
-  - material: EXPERIENCE_BOTTLE
-    amount: 64
-  - material: EXPERIENCE_BOTTLE
-    amount: 64
-  - material: EXPERIENCE_BOTTLE
-    amount: 64
   - nexo-id: green_aurorite_helmet
     amount: 1
   - nexo-id: green_aurorite_chestplate

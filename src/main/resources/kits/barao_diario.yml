@@ -3,7 +3,7 @@ items:
   - material: GOLDEN_CARROT
     amount: 16
   - material: GOLDEN_APPLE
-    amount: 6
+    amount: 4
   - material: EXPERIENCE_BOTTLE
     amount: 32
   - material: POTION

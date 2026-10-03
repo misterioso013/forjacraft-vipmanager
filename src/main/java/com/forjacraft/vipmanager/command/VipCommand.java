@@ -97,7 +97,7 @@ public final class VipCommand implements CommandExecutor, TabCompleter {
                 case UNKNOWN_KIT -> config.message("kit-unknown");
                 case TIER_TOO_LOW -> config.message("kit-tier-too-low").replace("%tier%", tier);
                 case ON_COOLDOWN -> config.message("kit-on-cooldown")
-                        .replace("%time%", DurationParser.format(outcome.cooldownRemainingSeconds()));
+                        .replace("%time%", DurationParser.formatDaysHours(outcome.cooldownRemainingSeconds()));
                 case NOT_ENOUGH_SPACE -> config.message("kit-no-space");
             };
             Bukkit.getScheduler().runTask(plugin, () -> player.sendMessage(colored(message)));

@@ -1,0 +1,37 @@
+one-time: true
+cooldown-seconds: 0
+items:
+  - material: STONE_SWORD
+    amount: 1
+    enchants: ['SHARPNESS;1', 'UNBREAKING;1']
+  - material: STONE_AXE
+    amount: 1
+    enchants: ['EFFICIENCY;1', 'UNBREAKING;1']
+  - material: STONE_PICKAXE
+    amount: 1
+    enchants: ['EFFICIENCY;1', 'UNBREAKING;1']
+    offhand: true
+  - material: STONE_SHOVEL
+    amount: 1
+    enchants: ['EFFICIENCY;1', 'UNBREAKING;1']
+  - material: LEATHER_HELMET
+    amount: 1
+    enchants: ['PROTECTION;1', 'UNBREAKING;1']
+    leather-color: 10511680
+  - material: LEATHER_CHESTPLATE
+    amount: 1
+    enchants: ['PROTECTION;1', 'UNBREAKING;1']
+    leather-color: 10511680
+  - material: LEATHER_LEGGINGS
+    amount: 1
+    enchants: ['PROTECTION;1', 'UNBREAKING;1']
+    leather-color: 10511680
+  - material: LEATHER_BOOTS
+    amount: 1
+    enchants: ['PROTECTION;1', 'UNBREAKING;1']
+    leather-color: 10511680
+  - material: COOKED_BEEF
+    amount: 16
+    display-name: '&6&lPicanha'
+  - material: TORCH
+    amount: 16

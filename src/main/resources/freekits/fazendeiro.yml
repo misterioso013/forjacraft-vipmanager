@@ -1,0 +1,25 @@
+one-time: true
+cooldown-seconds: 0
+items:
+  - material: WOODEN_HOE
+    amount: 1
+    display-name: '&a&lEnxada da Sorte'
+    enchants: ['FORTUNE;3', 'UNBREAKING;1']
+  - material: CARROT
+    amount: 2
+  - material: POTATO
+    amount: 2
+  - material: WHEAT_SEEDS
+    amount: 2
+  - material: BEETROOT_SEEDS
+    amount: 2
+  - material: MELON_SEEDS
+    amount: 2
+  - material: PUMPKIN_SEEDS
+    amount: 2
+  - material: BONE_MEAL
+    amount: 16
+  - material: OAK_SAPLING
+    amount: 4
+  - material: SPRUCE_SAPLING
+    amount: 1
