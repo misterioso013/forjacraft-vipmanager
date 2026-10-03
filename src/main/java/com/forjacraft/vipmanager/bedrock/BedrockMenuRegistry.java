@@ -59,20 +59,34 @@ public final class BedrockMenuRegistry {
                 throw new IllegalArgumentException("a button has no 'text'");
             }
             Object image = raw.get("image");
-            List<String> commands = new ArrayList<>();
-            Object rawCommands = raw.get("commands");
-            if (rawCommands instanceof List<?> list) {
-                for (Object command : list) {
-                    commands.add(String.valueOf(command));
-                }
+            List<String> commands = stringList(raw.get("commands"));
+            List<String> grant = stringList(raw.get("grant-commands"));
+            Object price = raw.get("price");
+            int cost = price instanceof Number n ? n.intValue() : 0;
+            if (cost < 0 || (cost > 0 && grant.isEmpty())) {
+                throw new IllegalArgumentException("button '" + text + "': price needs grant-commands and must not be negative");
             }
+            Object unless = raw.get("unless-permission");
+            Object success = raw.get("success-message");
             buttons.add(new BedrockMenu.Button(String.valueOf(text),
-                    image == null ? null : String.valueOf(image), List.copyOf(commands)));
+                    image == null ? null : String.valueOf(image), commands, cost, grant,
+                    unless == null ? null : String.valueOf(unless),
+                    success == null ? null : String.valueOf(success)));
         }
         if (buttons.isEmpty()) {
             throw new IllegalArgumentException("no buttons");
         }
         return new BedrockMenu(id, title, content, List.copyOf(buttons));
+    }
+
+    private static List<String> stringList(Object raw) {
+        List<String> out = new ArrayList<>();
+        if (raw instanceof List<?> list) {
+            for (Object entry : list) {
+                out.add(String.valueOf(entry));
+            }
+        }
+        return List.copyOf(out);
     }
 
     public Optional<BedrockMenu> get(String id) {
