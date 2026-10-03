@@ -29,9 +29,9 @@ final class FloodgateBridge {
         }
         for (BedrockMenu.Button button : buttons) {
             if (button.imageUrl() != null && !button.imageUrl().isBlank()) {
-                form.button(button.text(), FormImage.Type.URL, button.imageUrl());
+                form.button(BedrockText.toBedrock(button.text()), FormImage.Type.URL, button.imageUrl());
             } else {
-                form.button(button.text());
+                form.button(BedrockText.toBedrock(button.text()));
             }
         }
         form.validResultHandler(response -> onClick.accept(response.clickedButtonId()));

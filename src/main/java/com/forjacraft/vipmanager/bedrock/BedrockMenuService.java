@@ -1,7 +1,6 @@
 package com.forjacraft.vipmanager.bedrock;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -52,7 +51,8 @@ public final class BedrockMenuService {
         }
         BedrockMenu menu = maybeMenu.get();
         try {
-            FloodgateBridge.send(player.getUniqueId(), color(menu.title()), color(menu.content()), menu.buttons(),
+            FloodgateBridge.send(player.getUniqueId(), BedrockText.toBedrock(menu.title()),
+                    BedrockText.toBedrock(menu.content()), menu.buttons(),
                     clicked -> runButton(player, menu, clicked));
         } catch (Throwable t) {
             plugin.getLogger().log(Level.WARNING, "Failed to send Bedrock menu '" + menuId + "' to " + player.getName(), t);
@@ -71,9 +71,5 @@ public final class BedrockMenuService {
                 Bukkit.dispatchCommand(player, clean);
             }
         });
-    }
-
-    private String color(String text) {
-        return text == null ? "" : ChatColor.translateAlternateColorCodes('&', text);
     }
 }
