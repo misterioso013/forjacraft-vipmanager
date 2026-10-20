@@ -19,11 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Unified {@code /kit} (alias {@code /kits}) - takes over the command entirely
- * from PlayerKits2 (see {@code plugin.yml}'s softdepend on PlayerKits2, which
- * makes VipManager register this command second and win the unprefixed name).
- * PlayerKits2 stays installed only for the kits NOT migrated here (booster,
- * voto, basico) - reachable via its surviving {@code /playerkits} alias.
+ * Unified {@code /kit} (alias {@code /kits}). EssentialsX also declares {@code /kit}, so
+ * {@code plugin.yml} lists Essentials as a softdepend: VipManager then registers this command
+ * second and wins the unprefixed name. All kits (VIP and free) live in this plugin.
  */
 public final class KitCommand implements CommandExecutor, TabCompleter {
 

@@ -6,10 +6,10 @@ author: misterioso013
 description: Multi-tier VIP subscription manager - banked time per tier, one active at a time, automatic expiry.
 
 depend: [LuckPerms]
-# PlayerKits2 is a softdepend (not just "nice if present") specifically so this
+# Essentials is a softdepend (not just "nice if present") specifically so this
 # plugin loads AFTER it - both declare a "kit" command, and Bukkit lets the
 # later-registered plugin win the unprefixed name. See KitCommand's class docs.
-softdepend: [Vault, PlaceholderAPI, Nexo, PlayerKits2, floodgate, ShopGUIPlus]
+softdepend: [Vault, PlaceholderAPI, Nexo, Essentials, floodgate, ShopGUIPlus]
 
 commands:
   vip:

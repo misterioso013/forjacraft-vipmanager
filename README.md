@@ -99,11 +99,11 @@ its grant step changed from `lp user <player> parent set <tier>` to
 entirely and will reintroduce the exact bug (no expiry, no multi-tier support) this
 project fixes.
 
-## VIP kit delivery (replaces PlayerKits2 for the 12 tier kits)
+## VIP kit delivery (the 12 tier kits)
 
 The 4 tiers x 3 periods (diário/semanal/mensal) of VIP kits are handled entirely by
-this plugin now, not PlayerKits2. See "Free kits" below for the other kits this plugin
-also took over, and what's deliberately still left on PlayerKits2.
+this plugin (PlayerKits2 was removed from the server). See "Free kits" below for the
+free kits.
 
 Why: every Aurorite armor piece used to be delivered via
 `console_command: nexo give <item> <amount> <player>` from a PlayerKits2 action - a
@@ -171,7 +171,7 @@ without closing everything and re-running `/kitsvip`.
   12 buttons at `/vip kitclaim <tier> <periodo>` and `/vip kitpreview <tier> <periodo>`
   instead of `playerkits claim/preview KIT<TIER><PERIODO>`.
 
-## Free kits (novato/claim/fazendeiro/comida - replaces PlayerKits2 for these 4)
+## Free kits (novato/claim/fazendeiro/comida)
 
 A separate, parallel system from the VIP kits above - no tier, no rank check, just
 "can everyone claim this, and how often." Reuses the same item-resolving machinery
@@ -192,17 +192,12 @@ entirely around the tier+period model these kits don't have.
   minutes/an hour long, not weeks, so day/hour-only precision would be actively wrong
   (a 4-minute wait would misleadingly show "1h").
 - **Command**: unified `/kit` (alias `/kits`) - see the Commands table above. This
-  plugin's `plugin.yml` lists `PlayerKits2` as a `softdepend` specifically so it loads
+  plugin's `plugin.yml` lists `Essentials` as a `softdepend` specifically so it loads
   *after* it: both declare a `kit` command, and Bukkit lets whichever plugin registers
-  second win the unprefixed name. PlayerKits2's own `/playerkits` alias (which it
-  declares independently) is untouched by this and keeps working.
-- **Deliberately NOT migrated**: `booster` (a Discord-boost reward - not designed yet,
-  needs a Cash-store price decision first) and `voto` (a vote-reward crate key,
-  apparently triggered by an external voting plugin) both tag their item with NBT for
-  ItemsAdder/PhoenixCrates, which this plugin has never touched. `basico.yml` looks
-  like an unused example kit from PlayerKits2's own default install - not referenced
-  by any menu button. All three stay on PlayerKits2, which stays installed because of
-  them.
+  second win the unprefixed name.
+- **Not carried over when PlayerKits2 was removed**: `booster` (a Discord-boost reward that
+  was never designed on this server), `voto` (a vote-reward crate key for a voting plugin
+  that is not installed) and the unused example kit `basico`.
 
 ## Bedrock menus (native forms for mobile players)
 
