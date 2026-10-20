@@ -9,7 +9,7 @@ depend: [LuckPerms]
 # PlayerKits2 is a softdepend (not just "nice if present") specifically so this
 # plugin loads AFTER it - both declare a "kit" command, and Bukkit lets the
 # later-registered plugin win the unprefixed name. See KitCommand's class docs.
-softdepend: [Vault, PlaceholderAPI, Nexo, PlayerKits2, floodgate]
+softdepend: [Vault, PlaceholderAPI, Nexo, PlayerKits2, floodgate, ShopGUIPlus]
 
 commands:
   vip:
@@ -24,6 +24,10 @@ commands:
     description: Open the native Bedrock form for a menu.
     usage: /<command> <menu> [player]
     permission: vipmanager.admin.bedrockmenu
+  bedrockshop:
+    description: Open the native Bedrock shop for a ShopGUIPlus category.
+    usage: /<command> <category> [page]
+    permission: vipmanager.command.shop
   kit:
     aliases: [kits]
     description: Claim a free kit, preview one, or open the kits menu.
@@ -36,6 +40,9 @@ permissions:
     default: true
   vipmanager.command.switch:
     description: Switch active VIP tier (/vip switch)
+    default: true
+  vipmanager.command.shop:
+    description: Open the Bedrock shop (/bedrockshop)
     default: true
   vipmanager.command.kit:
     description: Claim/preview free kits and open the kits menu (/kit, /kits)

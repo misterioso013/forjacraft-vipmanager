@@ -1,0 +1,39 @@
+# Loja nativa para jogadores Bedrock (celular). Usa a API do ShopGUIPlus: preços, descontos
+# de VIP, estoque e regras de acesso continuam sendo os do ShopGUIPlus. Java não muda.
+# Abre com /bedrockshop <categoria> (o menu /loja do Bedrock já aponta para cá).
+page-size: 20
+
+# Rótulos das categorias do ShopGUIPlus (id -> nome mostrado ao jogador).
+labels:
+  vip: "Loja VIP & Exclusivos"
+  blocks: "Blocos: Gerais & Naturais"
+  blocks_wood: "Blocos: Madeiras & Troncos"
+  blocks_stone: "Blocos: Pedras & Rochas"
+  blocks_sand: "Blocos: Areias & Arenitos"
+  blocks_glass: "Blocos: Vidros & Janelas"
+  blocks_terracotta: "Blocos: Terracotas"
+  blocks_concrete: "Blocos: Concretos & Pós"
+  blocks_ice: "Blocos: Gelo & Neve"
+  blocks_nether_end: "Blocos: Nether & End"
+  ores: "Minérios & Metais"
+  farming: "Agricultura & Plantio"
+  food: "Alimentos & Carnes"
+  redstone: "Redstone & Mecanismos"
+  decorations: "Decorações & Iluminação"
+  drops: "Drops de Mobs"
+  miscellaneous: "Utilidades & Diversos"
+
+# Para onde o botão "Voltar" leva. Quem não está aqui volta para o menu /loja.
+parents:
+  blocks_wood: blocks
+  blocks_stone: blocks
+  blocks_sand: blocks
+  blocks_glass: blocks
+  blocks_terracotta: blocks
+  blocks_concrete: blocks
+  blocks_ice: blocks
+  blocks_nether_end: blocks
+
+# Quantidades oferecidas nos botões de compra e de venda.
+buy-amounts: [1, 16, 64]
+sell-amounts: [1, 16, 64]

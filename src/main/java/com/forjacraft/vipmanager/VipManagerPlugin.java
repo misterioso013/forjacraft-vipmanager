@@ -2,7 +2,9 @@ package com.forjacraft.vipmanager;
 
 import com.forjacraft.vipmanager.bedrock.BedrockMenuRegistry;
 import com.forjacraft.vipmanager.bedrock.BedrockMenuService;
+import com.forjacraft.vipmanager.bedrock.BedrockShopService;
 import com.forjacraft.vipmanager.command.BedrockMenuCommand;
+import com.forjacraft.vipmanager.command.BedrockShopCommand;
 import com.forjacraft.vipmanager.command.KitCommand;
 import com.forjacraft.vipmanager.command.VipAdminCommand;
 import com.forjacraft.vipmanager.command.VipCommand;
@@ -35,6 +37,7 @@ public final class VipManagerPlugin extends JavaPlugin {
     private VipService vipService;
     private LuckPermsBridge luckPermsBridge;
     private BedrockMenuRegistry bedrockMenuRegistry;
+    private BedrockShopService bedrockShopService;
     private int sweepTaskId = -1;
 
     @Override
@@ -107,6 +110,17 @@ public final class VipManagerPlugin extends JavaPlugin {
             bedrockPluginCommand.setTabCompleter(bedrockMenuCommand);
         }
 
+        this.bedrockShopService = new BedrockShopService(this, bedrockMenuService);
+        var bedrockShopPluginCommand = getCommand("bedrockshop");
+        if (bedrockShopPluginCommand != null) {
+            bedrockShopPluginCommand.setExecutor(new BedrockShopCommand(bedrockShopService));
+        }
+        if (bedrockShopService.isAvailable()) {
+            getLogger().info("Bedrock shop enabled (ShopGUIPlus + Floodgate).");
+        } else {
+            getLogger().info("Bedrock shop disabled (needs ShopGUIPlus and Floodgate).");
+        }
+
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new VipPlaceholderExpansion(vipService, vipConfig, bedrockMenuService).register();
             getLogger().info("Registered PlaceholderAPI expansion (%vipmanager_*%).");
@@ -149,6 +163,9 @@ public final class VipManagerPlugin extends JavaPlugin {
         this.vipConfig.reload(getConfig());
         if (bedrockMenuRegistry != null) {
             bedrockMenuRegistry.load();
+        }
+        if (bedrockShopService != null) {
+            bedrockShopService.reload();
         }
         // NOTE: the sweep task's own period (sweep.interval-seconds) is only read once at
         // startup - changing it in config.yml and reloading does not reschedule the running
